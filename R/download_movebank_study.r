@@ -1,6 +1,14 @@
 #download study and save it to the study_raw database
 
-source('~/projects/helper_functions/makeQueryString.r')
+#' copied from rMOL/r/shared.r
+makeQueryString <- function(paramList) {
+  attribs <- vector(length=0)
+  for(key in names(paramList)) {
+    attribs <- append(attribs,paste(key,paramList[[key]],sep='='))
+  }
+  qs <- paste(attribs,collapse='&')
+  return(qs)
+}
 
 studyApiCall <- function(study_id) {
 
@@ -8,18 +16,26 @@ studyApiCall <- function(study_id) {
   params$entity_type <- 'study'
   params$study_id <- study_id
   qs <- makeQueryString(params)
-  
+
   url <- sprintf('https://www.movebank.org/movebank/service/direct-read?%s',qs)
   return(url)
 }
 
-downloadStudy <- function(studyId=NULL) {
+#' @param studyid \code(integer) The id of the study
+#' @param userid \code(string) Movebank user id
+#' @return \code(tibble) A dataframe of information about the study
+#' @examples
+#' downloadStudy(<id>,"ben.s.carlson")
+#' @export
+#'
+downloadStudy <- function(studyid,userid) {
   require(httr)
-  #require(getPass)
-  require(keyring)
-  
-  auth <- authenticate("ben.s.carlson", key_get('api'))
-  req <- studyApiCall(studyId)
+  require(getPass)
+  #require(keyring)
+
+  #auth <- authenticate(userId, key_get('api'))
+  auth <- authenticate(userid,getPass())
+  req <- studyApiCall(studyid)
   resp <- GET(req, auth)
   #'TODO: do some checking of outputs to make sure I got a good response
   cd <- resp$status_code==200
@@ -31,7 +47,7 @@ downloadStudy <- function(studyId=NULL) {
   # rowsRn <- rows %>% rename(individual_id=id) %>%
   #   mutate_at(.vars=vars(earliest_date_born,exact_date_of_birth,latest_date_born),
   #             .funs=funs(as.POSIXct(ifelse(.=='',NA,.),tz='GMT')))
-  
+
   #return(rowsRn)
 }
 
