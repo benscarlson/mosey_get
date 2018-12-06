@@ -1,14 +1,3 @@
-#download study and save it to the study_raw database
-
-#' copied from rMOL/r/shared.r
-makeQueryString <- function(paramList) {
-  attribs <- vector(length=0)
-  for(key in names(paramList)) {
-    attribs <- append(attribs,paste(key,paramList[[key]],sep='='))
-  }
-  qs <- paste(attribs,collapse='&')
-  return(qs)
-}
 
 studyApiCall <- function(study_id) {
 
@@ -21,6 +10,8 @@ studyApiCall <- function(study_id) {
   return(url)
 }
 
+#' Downloads study metadata using movebank api
+#'
 #' @param studyid \code(integer) The id of the study
 #' @param userid \code(string) Movebank user id
 #' @return \code(tibble) A dataframe of information about the study
@@ -37,7 +28,7 @@ downloadStudy <- function(studyid,userid) {
   auth <- authenticate(userid,getPass())
   req <- studyApiCall(studyid)
   resp <- GET(req, auth)
-  #'TODO: do some checking of outputs to make sure I got a good response
+  #TODO: do some checking of outputs to make sure I got a good response
   cd <- resp$status_code==200
   #stopifnot(cd,sprintf('Failed with status code %s',cd))
   stop_for_status(resp)
