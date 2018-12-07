@@ -1,47 +1,34 @@
-#' Downloads study event data using movebank api
 #'
-#' @param studyid \code(integer) The id of the study
-#' @param userid \code(string) Movebank user id
-#' @return \code(tibble) A dataframe of information about the study
-#' @examples
-#' downloadStudy(<id>,"ben.s.carlson")
-#' @export
+#' eventAPICall <- function(study_id,start=NULL,end=NULL) {
 #'
-#' Creates an movebank api call
-#' Usage example: eventAPICall(study_id=9648615)
+#'   if(!is.null(start)) {
+#'     dt <- strptime("2008-06-04 13:30:45", "%Y-%m-%d %H:%M:%S",tz='UTC')
+#'     start_dt <- paste0(gsub('-|:| ','', ds),'000')
+#'   }
 #'
-#' TODO: filter by visible!=FALSE.
-#' visible: Determines whether an event is visible on the Movebank Search map. Values are calculated automatically, with FALSE indicating that the event has been marked as an outlier by manually marked outlier or algorithm marked outlier. Allowed values are TRUE or FALSE.
-eventAPICall <- function(study_id,start=NULL,end=NULL) {
-
-  if(!is.null(start)) {
-    dt <- strptime("2008-06-04 13:30:45", "%Y-%m-%d %H:%M:%S",tz='UTC')
-    start_dt <- paste0(gsub('-|:| ','', ds),'000')
-  }
-
-  fields <- c(
-    'event_id',
-    'study_id',
-    'individual_id',
-    'location_long',
-    'location_lat',
-    'timestamp',
-    #'eobs_temperature',
-    'ground_speed',
-    'sensor_type_id',
-    'manually_marked_outlier',
-    'visible')
-
-  params <- list()
-  params$entity_type <- 'event'
-  params$study_id <- study_id
-  params$sensor_type_id <- 653 #GPS tag id is 653
-  params$attributes <- paste(fields,collapse=',')
-  qs <- makeQueryString(params)
-
-  url <- sprintf('https://www.movebank.org/movebank/service/direct-read?%s',qs)
-  return(url)
-}
+#'   fields <- c(
+#'     'event_id',
+#'     'study_id',
+#'     'individual_id',
+#'     'location_long',
+#'     'location_lat',
+#'     'timestamp',
+#'     #'eobs_temperature',
+#'     'ground_speed',
+#'     'sensor_type_id',
+#'     'manually_marked_outlier',
+#'     'visible')
+#'
+#'   params <- list()
+#'   params$entity_type <- 'event'
+#'   params$study_id <- study_id
+#'   params$sensor_type_id <- 653 #GPS tag id is 653
+#'   params$attributes <- paste(fields,collapse=',')
+#'   qs <- makeQueryString(params)
+#'
+#'   url <- sprintf('https://www.movebank.org/movebank/service/direct-read?%s',qs)
+#'   return(url)
+#' }
 # save to e.g. whitestork/scratch/movebank_raw/LifeTrack_White_Stork_Bavaria_raw.csv
 
 # #ACC data are also stored in the event table
