@@ -15,3 +15,10 @@ getStudy(studyid=123413, userid='ben.s.carlson')
 
 getEvent(studyid=123413, userid='ben.s.carlson')
 ```
+
+Installation
+
+```r
+library(devtools)
+install_github('benscarlson/rmoveapi')
+```
