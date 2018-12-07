@@ -42,7 +42,7 @@ getMvData <- function(apiReq,userid) {
   auth <- authenticate(userid,getPass())
 
   resp <- GET(apiReq, auth)
-  #'TODO: do some checking of outputs to make sure I got a good response
+  #TODO: do some checking of outputs to make sure I got a good response
   cd <- resp$status_code==200
   #stopifnot(cd,sprintf('Failed with status code %s',cd))
   stop_for_status(resp)

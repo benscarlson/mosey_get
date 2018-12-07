@@ -26,7 +26,7 @@ eventReq <- function(studyid) {
   fields <- c(
     'event_id','study_id','individual_id','location_long',
     'location_lat','timestamp',
-    #'eobs_temperature',
+    #eobs_temperature',
     'ground_speed','sensor_type_id','manually_marked_outlier','visible')
 
   return(apiReq('event',studyid,fields,653)) #GPS tag id is 653
