@@ -11,9 +11,9 @@ https://www.movebank.org/node/9
 Examples
 
 ```r
-getStudy(studyid=123413, userid='ben.s.carlson')
+getStudy(studyid=123413, userid='my.user.id')
 
-getEvent(studyid=123413, userid='ben.s.carlson')
+getEvent(studyid=123413, userid='my.user.id')
 ```
 
 Installation
