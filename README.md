@@ -63,4 +63,23 @@ getIndividual(studyid,params=params)
 
 ```
 
+To see the api request url without actually making the request, use urlonly=TRUE
+
+```r
+
+studyid <- 123413
+
+getStudy(studyid,urlonly=TRUE)
+
+```
+
+getStudy() can accept a vector of study ids, but other get*() functions can't.
+
+```r
+
+studyid <- c(123413,282734839)
+
+getStudy(studyid)
+
+```
 
