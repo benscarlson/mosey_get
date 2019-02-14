@@ -59,7 +59,7 @@ studyid <- 123413
 
 params <- list(attributes=c('id','ring_id','local_identifer'))
 
-getDeployment(studyid,params=params)
+getIndividual(studyid,params=params)
 
 ```
 
