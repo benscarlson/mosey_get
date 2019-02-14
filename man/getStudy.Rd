@@ -2,21 +2,19 @@
 % Please edit documentation in R/get_data.r
 \name{getStudy}
 \alias{getStudy}
-\title{Downloads study metadata using movebank api}
+\title{Downloads study data using movebank api}
 \usage{
-getStudy(studyid, userid)
+getStudy(studyid, params = list(), urlonly = FALSE)
 }
 \arguments{
-\item{studyid}{The id of the study}
-
-\item{userid}{Movebank user id}
+\item{studyid}{\code{integer} The id of the study. Can be a vector of ids.}
 }
 \value{
 Information about the study
 }
 \description{
-Downloads study metadata using movebank api
+Downloads study data using movebank api
 }
 \examples{
-getStudy(123413,"ben.s.carlson")
+getStudy(123413)
 }

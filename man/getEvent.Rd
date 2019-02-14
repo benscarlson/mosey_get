@@ -4,12 +4,11 @@
 \alias{getEvent}
 \title{Downloads event data for a study using movebank api}
 \usage{
-getEvent(studyid, userid)
+getEvent(studyid, attributes = NULL, ts_start = NULL, ts_end = NULL,
+  params = list(), urlonly = FALSE)
 }
 \arguments{
 \item{studyid}{The id of the study}
-
-\item{userid}{Movebank user id}
 }
 \value{
 Events for the study
@@ -18,5 +17,5 @@ Events for the study
 Downloads event data for a study using movebank api
 }
 \examples{
-getEvent(123413,"ben.s.carlson")
+getEvent(123413)
 }

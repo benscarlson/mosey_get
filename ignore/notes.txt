@@ -1,0 +1,22 @@
+  #2008-06-04 13:30:45.999
+
+  #timestamp_start=20080604133045000&timestamp_end=20080604133046000
+
+  #2002-05-31 04:00:00.000
+  #2004-06-21 05:00:00.000
+
+# Study id: 123413
+# Study name: BCI Ocelot
+# Number of Animals	11
+# Number of Tags	11
+# Number of Deployments	11
+# Time of First Deployed Location	2002-05-31 04:00:00.000
+# Time of Last Deployed Location	2004-06-21 05:00:00.000
+# Taxa	Leopardus pardalis
+
+  #visible: Determines whether an event is visible on the Movebank Search map. Values are calculated automatically, with FALSE indicating that the event has been marked as an outlier by manually marked outlier or algorithm marked outlier. Allowed values are TRUE or FALSE.
+
+  #GPS tag id is 653
+
+How to filter on true/false:
+i_am_owner=true
