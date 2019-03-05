@@ -20,3 +20,30 @@
 
 How to filter on true/false:
 i_am_owner=true
+
+Public, and I have accepted the license terms:
+Name: Galapagos Albatrosses
+Movebank ID	2911040
+Study Statistics
+Number of Animals	28
+Number of Tags	28
+Number of Deployments	28
+Time of First Deployed Location	2008-05-31 13:29:31.998
+Time of Last Deployed Location	2008-11-06 18:00:55.998
+Taxa	Phoebastria irrorata
+
+Public, and I have *not* accepted license terms:
+Study: African cuckoo in Nigeria (data from Iwajomo et al. 2018)
+Movebank ID	374990463
+Study Statistics
+Number of Animals	5
+Number of Tags	5
+Number of Deployments	5
+Time of First Deployed Location	2013-05-29 20:39:11.000
+Time of Last Deployed Location	2017-06-28 21:30:06.000
+Taxa	Cuculus gularis
+
+Example study from Movebank developer
+685178886
+
+Study where I had to accept license that I found on movebank: 16615296

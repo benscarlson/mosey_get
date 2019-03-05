@@ -9,6 +9,12 @@ getEvent(studyid, attributes = NULL, ts_start = NULL, ts_end = NULL,
 }
 \arguments{
 \item{studyid}{The id of the study}
+
+\item{attributes}{\code{character} Vector of desired attributes. To get all attributes use attributes=all}
+
+\item{ts_start}{\code{character} Assumes UTC}
+
+\item{ts_end}{\code{character} Assumes UTC}
 }
 \value{
 Events for the study

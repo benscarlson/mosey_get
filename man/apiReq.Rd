@@ -6,6 +6,12 @@
 \usage{
 apiReq(params)
 }
+\arguments{
+\item{params}{\code{list} List in which item name is the api parameter name, and value is the value to send to api}
+}
+\value{
+\code{character} A request url
+}
 \description{
 Formats an movebank api request
 }

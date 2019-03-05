@@ -83,3 +83,14 @@ getStudy(studyid)
 
 ```
 
+Certain studies require you to accept license terms before downloading any data. One way to do this is to accept these terms on movebank.com. Terms can also be accepted over the api by using accept_license=TRUE in the request for data.
+
+```r
+
+studyid <- 685178886
+
+dat <- getEvent(studyid,accept_license=TRUE)
+
+head(dat)
+
+```

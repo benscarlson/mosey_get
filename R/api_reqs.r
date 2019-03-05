@@ -2,8 +2,8 @@
 
 #' Formats an movebank api request
 #'
-#' @param params \{list} List in which item name is the api parameter name, and value is the value to send to api
-#' @return \{character} A request url
+#' @param params \code{list} List in which item name is the api parameter name, and value is the value to send to api
+#' @return \code{character} A request url
 #'
 apiReq <- function(params) { #entityType, studyid, fields=NULL, sensor_type_id=NULL,startTs,endTs
 

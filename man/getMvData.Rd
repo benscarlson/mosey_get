@@ -4,8 +4,23 @@
 \alias{getMvData}
 \title{Gets movebank data based on api request}
 \usage{
-getMvData(apiReq)
+getMvData(apiReq, accept_license = FALSE, handle = NULL)
+}
+\arguments{
+\item{apiReq}{\code{character}}
+
+\item{accept_license}{\code{boolean} Set to TRUE to use md5 method to accept license terms over api.}
+
+\item{handle}{\code{handle} Handle object used in httr. Mainly for testing purposes to start with blank session.}
+}
+\value{
+\code{data.frame} Data from API request
 }
 \description{
 Gets movebank data based on api request
+}
+\examples{
+apiReq <- https://www.movebank.org/movebank/service/direct-read?entity_type=study&study_id=2911040
+getMvData(apiReq,accept_license=TRUE)
+
 }

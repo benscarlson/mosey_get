@@ -4,12 +4,14 @@ Title: Light-weight r wrapper around movebank api
 Version: 0.1.0
 Author: Ben Carlson
 Maintainer: Ben Carlson <ben.carlson@yale.edu>
-Description: Magic and other stuff
+Description: API magic and other stuff
 License: Use at your own risk
 Encoding: UTF-8
 LazyData: true
 Imports:
+  digest,
   httr,
-  getPass
+  getPass,
+  stringr
 RoxygenNote: 6.1.1
 Suggests: testthat
