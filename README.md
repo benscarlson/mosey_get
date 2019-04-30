@@ -94,3 +94,13 @@ dat <- getEvent(studyid,accept_license=TRUE)
 head(dat)
 
 ```
+
+By default, get*() functions write the data received from the server to memory. Some datasets are too large to store in memory. In these cases, you can use `save_as` parameter to save the result directly to disk.
+
+```r
+
+studyid <- 685178886
+
+getEvent(studyid,save_as='~/scratch/data.csv',accept_license=TRUE)
+
+```
