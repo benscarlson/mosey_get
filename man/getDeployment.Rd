@@ -4,7 +4,7 @@
 \alias{getDeployment}
 \title{Downloads deployment data using movebank api}
 \usage{
-getDeployment(studyid, params = list(), urlonly = FALSE)
+getDeployment(studyid, params = list(), ...)
 }
 \arguments{
 \item{studyid}{\code{integer} The id of the study. Must only be a single id (unlike getStudy).}

@@ -4,7 +4,7 @@
 \alias{getStudy}
 \title{Downloads study data using movebank api}
 \usage{
-getStudy(studyid, params = list(), urlonly = FALSE)
+getStudy(studyid, params = list(), ...)
 }
 \arguments{
 \item{studyid}{\code{integer} The id of the study. Can be a vector of ids.}

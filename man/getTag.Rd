@@ -4,7 +4,7 @@
 \alias{getTag}
 \title{Downloads tag data using movebank api}
 \usage{
-getTag(studyid, params = list(), urlonly = FALSE)
+getTag(studyid, params = list(), ...)
 }
 \arguments{
 \item{studyid}{\code{integer} The id of the study. Must only be a single id (unlike getStudy).}

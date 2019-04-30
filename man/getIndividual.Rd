@@ -4,7 +4,7 @@
 \alias{getIndividual}
 \title{Downloads individual data using movebank api}
 \usage{
-getIndividual(studyid, params = list(), urlonly = FALSE)
+getIndividual(studyid, params = list(), ...)
 }
 \arguments{
 \item{studyid}{\code{integer} The id of the study. Must only be a single id (unlike getStudy).}

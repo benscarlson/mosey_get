@@ -13,7 +13,6 @@ makeQueryString <- function(paramList) {
 #'
 formatTs <- function(ts) {
 
-
   #strftime is for formatting date objects.
   #usetz just controls whether tz is printed, *not* whether it is used to convert time
   #for this, need to specify tz, otherwise time is converted to local time
@@ -22,3 +21,16 @@ formatTs <- function(ts) {
 
   return(tsFmt)
 }
+
+#' Sets the userid for the r session
+#' @param userid \code{character} Movebank user id
+#' @param pass \code{character} Movebank password
+#' @example
+#' setAuth('my.user.id',getPass())
+#' @export
+#'
+setAuth <- function(userid,pass) {
+  options(rmoveapi.userid=userid)
+  options(rmoveapi.pass=pass)
+}
+

@@ -1,29 +1,25 @@
-  #2008-06-04 13:30:45.999
 
-  #timestamp_start=20080604133045000&timestamp_end=20080604133046000
+Study name: BCI Ocelot
+Study id: 123413
+Access: Public, but need to accept license terms
+Sensor Type ID: Radio transmitter (673)
+Number of Animals	11
+Number of Tags	11
+Number of Deployments	11
+Time of First Deployed Location	2002-05-31 04:00:00.000
+Time of Last Deployed Location	2004-06-21 05:00:00.000
+Taxa	Leopardus pardalis
+Sensor Type: Radio-transmitter (id=673)
 
-  #2002-05-31 04:00:00.000
-  #2004-06-21 05:00:00.000
+Study name: Example study from Movebank developer
+Study id: 685178886
+Access: Public, need to accept license
+Sensor Type ID: GPS (653)
 
-# Study id: 123413
-# Study name: BCI Ocelot
-# Number of Animals	11
-# Number of Tags	11
-# Number of Deployments	11
-# Time of First Deployed Location	2002-05-31 04:00:00.000
-# Time of Last Deployed Location	2004-06-21 05:00:00.000
-# Taxa	Leopardus pardalis
-
-  #visible: Determines whether an event is visible on the Movebank Search map. Values are calculated automatically, with FALSE indicating that the event has been marked as an outlier by manually marked outlier or algorithm marked outlier. Allowed values are TRUE or FALSE.
-
-  #GPS tag id is 653
-
-How to filter on true/false:
-i_am_owner=true
-
-Public, and I have accepted the license terms:
 Name: Galapagos Albatrosses
-Movebank ID	2911040
+Study ID	2911040
+Access: Public, and I have accepted the license terms
+Sensor Type ID: GPS (653) and ACC (2365683)
 Study Statistics
 Number of Animals	28
 Number of Tags	28
@@ -43,7 +39,19 @@ Time of First Deployed Location	2013-05-29 20:39:11.000
 Time of Last Deployed Location	2017-06-28 21:30:06.000
 Taxa	Cuculus gularis
 
-Example study from Movebank developer
-685178886
+How to filter on true/false:
+i_am_owner=true
+
+
+  #GPS tag id is 653
+
+  #visible: Determines whether an event is visible on the Movebank Search map. Values are calculated automatically, with FALSE indicating that the event has been marked as an outlier by manually marked outlier or algorithm marked outlier. Allowed values are TRUE or FALSE.
 
 Study where I had to accept license that I found on movebank: 16615296
+
+  #2008-06-04 13:30:45.999
+
+  #timestamp_start=20080604133045000&timestamp_end=20080604133046000
+
+  #2002-05-31 04:00:00.000
+  #2004-06-21 05:00:00.000

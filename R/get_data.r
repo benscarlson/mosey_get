@@ -70,16 +70,12 @@ getDeployment <- function(studyid,params=list(),...) {
 #' getEvent(123413)
 #' @export
 #'
-getEvent <- function(studyid,attributes=NULL,ts_start=NULL,ts_end=NULL,params=list(),...) {
-
-  #TODO: set the userid using options()
+getEvent <- function(studyid,attributes=NULL,sensor_type_id=NULL,ts_start=NULL,ts_end=NULL,params=list(),...) {
 
   params$entity_type = 'event'
 
-  if(is.null(attributes)) {
-    params$attributes <- c(
-      'event_id','study_id','individual_id','location_long','location_lat','timestamp',
-      'ground_speed','sensor_type_id','manually_marked_outlier','visible')
+  if(!is.null(attributes)) {
+    params$attributes <- attributes
   }
 
   if(!is.null(ts_start)) {
@@ -88,6 +84,10 @@ getEvent <- function(studyid,attributes=NULL,ts_start=NULL,ts_end=NULL,params=li
 
   if(!is.null(ts_end)) {
     params$timestamp_end <- as.POSIXct(ts_end, tz='UTC')
+  }
+
+  if(!is.null(sensor_type_id)) {
+    params$sensor_type_id=sensor_type_id
   }
 
   return(getGeneric(studyid,params,...)) #make the request
@@ -118,21 +118,18 @@ getGeneric <- function(studyid,params,...) {
 #' @param apiReq \code{character} URL for API request.
 #' @param accept_license \code{boolean} Set to TRUE to use md5 method to accept license terms over api.
 #' @param handle \code{handle} Handle object used in httr. Mainly for testing purposes to start with blank session.
+#' @param save_as \code{character} Save response directly to disk.
 #'
-#' @return \code{data.frame} Data from API request
+#' @return \code{data.frame} Data from API request. If saving results to disk, returns TRUE.
 #' @examples
 #' apiReq <- https://www.movebank.org/movebank/service/direct-read?entity_type=study&study_id=2911040
 #' getMvData(apiReq,accept_license=TRUE)
 #'
-getMvData <- function(apiReq,accept_license=FALSE,handle=NULL) {
-
-  #TODO: password management needs to be better.
-  # First, check if there is a path to a file that contains the password
-  # Then, check to see if password has been set in rmoveapi.pass
-  # Then, use getPass to ask for password.
+getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL) {
 
   userid <- getOption('rmoveapi.userid')
   pass <- getOption('rmoveapi.pass')
+
   licenseTxt <- "The requested download may contain copyrighted material"
 
   if(is.null(userid)) {
@@ -143,37 +140,62 @@ getMvData <- function(apiReq,accept_license=FALSE,handle=NULL) {
     stop('Need to set password.\nUse options(rmoveapi.pass=<pass>)')
   }
 
-  auth <- httr::authenticate(userid,pass) #getPass::getPass()
+  auth <- httr::authenticate(userid,pass)
 
-  if(is.null(handle)) {
-    resp <- httr::GET(apiReq, auth)
+  #TODO: I think I can just pass in handle, should do the right thing if null
+  if(is.null(save_as)) {
+    writeMethod <- write_memory()
   } else {
-    resp <- httr::GET(apiReq,handle=handle,auth)
+    writeMethod <- write_disk(save_as,overwrite=TRUE)
   }
+
+  resp <- httr::GET(apiReq, auth, writeMethod, handle=handle)
 
   httr::stop_for_status(resp)
 
-  cont <- httr::content(resp, as='text', encoding='UTF-8') #get the content as a text string, as recommened by the docs
+  #need to check result to see if license text was returned. First, load it from memory or disk.
+  if(is.null(save_as)) {
+    cont <- httr::content(resp, as='text', encoding='UTF-8') #get the content as a text string, as recommened by the docs
+  } else {
+    cont <- readLines(file(save_as,open='r'),n=1) #just read first line, because file is probably large
+  }
 
-  #If we got the license text, need to accept license by sending back MD5 of license text
-  # Must be in the same session in order to work
-  if(stringr::str_detect(cont,licenseTxt)) {
-    if(accept_license) {
-      #md5 of license text is passed back to movebank in order to accept terms
-      md5 <- digest::digest(cont, "md5", serialize = FALSE)
-
-      apiReq2 <- glue::glue('{apiReq}&license-md5={md5}')
-      #apiReq2 <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&study_id=685178886&license-md5=c017d5bda56c72ccd079a864130d851f'
-
-      resp2 <- httr::GET(apiReq2, auth)
-      httr::stop_for_status(resp2)
-      cont <- httr::content(resp2, as='text', encoding='UTF-8')
+  #Check if response is license text. If not, can just return the data
+  if(!stringr::str_detect(cont,licenseTxt)) {
+    if(is.null(save_as)) {
+      return(read.csv(text=cont,stringsAsFactors=FALSE, na.strings = "")) #read in the string into a dataframe and return
     } else {
-      message('Data could not be downloaded because you need to accept license terms.\nUse accept_license=TRUE or accept terms on movebank.com')
-      return(NULL)
+      return(TRUE) #if saved to disk, then just return true
     }
   }
 
-  rows <- read.csv(text=cont,stringsAsFactors=FALSE, na.strings = "") #read in the string into a dataframe
-  return(rows)
+  #If we've reached this point, then we got license text. Now, return unless user has set accept_license = TRUE
+  if(!accept_license) {
+    message('Data could not be downloaded because you need to accept license terms.\nUse accept_license=TRUE or accept terms on movebank.com')
+    return(NULL)
+  }
+
+  #If we've reached this point, then we got license text, and user has set accept_license = TRUE
+  # need to accept license by sending back MD5 of license text. Must be in the same session in order to work
+
+  #content() will either extract the content from memory or read from disk, depending on how response was saved
+  license <- httr::content(resp, as='text', encoding='UTF-8')
+
+  md5 <- digest::digest(license, "md5", serialize = FALSE)
+
+  apiReq2 <- glue::glue('{apiReq}&license-md5={md5}')
+  #apiReq2 <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&study_id=685178886&license-md5=c017d5bda56c72ccd079a864130d851f'
+
+  resp2 <- httr::GET(apiReq2, auth, writeMethod)
+  httr::stop_for_status(resp2)
+
+  #Either return data or return TRUE (if data was saved to disk)
+  if(is.null(save_as)) {
+    cont <- httr::content(resp2, as='text', encoding='UTF-8')
+    rows <- read.csv(text=cont,stringsAsFactors=FALSE, na.strings = "") #read in the string into a dataframe
+    return(rows)
+  } else {
+    return(TRUE)
+  }
+
 }
