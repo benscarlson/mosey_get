@@ -144,9 +144,9 @@ getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL) {
 
   #TODO: I think I can just pass in handle, should do the right thing if null
   if(is.null(save_as)) {
-    writeMethod <- write_memory()
+    writeMethod <- httr::write_memory()
   } else {
-    writeMethod <- write_disk(save_as,overwrite=TRUE)
+    writeMethod <- httr::write_disk(save_as,overwrite=TRUE)
   }
 
   resp <- httr::GET(apiReq, auth, writeMethod, handle=handle)
