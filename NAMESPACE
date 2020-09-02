@@ -3,6 +3,7 @@
 export(getDeployment)
 export(getEvent)
 export(getIndividual)
+export(getSensor)
 export(getStudy)
 export(getTag)
 export(setAuth)

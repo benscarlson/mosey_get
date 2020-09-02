@@ -4,8 +4,15 @@
 \alias{getEvent}
 \title{Downloads event data for a study using movebank api}
 \usage{
-getEvent(studyid, attributes = NULL, sensor_type_id = NULL,
-  ts_start = NULL, ts_end = NULL, params = list(), ...)
+getEvent(
+  studyid,
+  attributes = NULL,
+  sensor_type_id = NULL,
+  ts_start = NULL,
+  ts_end = NULL,
+  params = list(),
+  ...
+)
 }
 \arguments{
 \item{studyid}{The id of the study}

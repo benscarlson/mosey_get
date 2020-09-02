@@ -1,17 +1,35 @@
 library(digest)
+library(getPass)
 library(glue)
 library(httr)
 
-apiReq <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&study_id=685178886'
+#.study_id <- 123413 #BCI Ocelot
+.study_id <- 10449318 #LifeTrack White Stork Loburg
 
-auth <- httr::authenticate(getPass::getPass(),getPass::getPass())
+user <- getPass(msg='Userid')
+pass <- getPass(msg='Password')
 
-resp <- httr::GET(apiReq, auth) #handle=handle(''),
+apiReq <- glue('https://www.movebank.org/movebank/service/direct-read?entity_type=event&timestamp_start=20180501000000000&timestamp_end=20180601000000000&study_id={.study_id}')
 
-#get md5
+auth <- httr::authenticate(user,pass)
+
+#Make the first request, which should return the license text.
+resp <- httr::GET(apiReq, auth, handle=handle('')) #
+
+#Verify that license text was sent. Should start with <html>
+substring(content(resp),1,20)
+
+#Need to send hash of license and any cookies in second request
+
+#Make a hash of the license text and return in api request
 md5 <- digest(content(resp), "md5", serialize = FALSE)
 
+#Httr automatically persists cookies in subsequent requests to the same domain
+cookies(resp)
+
 apiReq2 <- glue('{apiReq}&license-md5={md5}')
-#apiReq2 <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&study_id=685178886&license-md5=c017d5bda56c72ccd079a864130d851f'
 
 resp2 <- httr::GET(apiReq2, auth)
+
+#Did not retrieve data
+status_code(resp2) #403 error

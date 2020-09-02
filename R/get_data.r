@@ -43,6 +43,24 @@ getTag <- function(studyid,params=list(),...) {
   return(getGeneric(studyid,params,...))
 }
 
+#' Downloads sensor data using movebank api
+#'
+#' @param studyid \code{integer} The id of the study. Must only be a single id.
+#' @return Sensor data
+#' @examples
+#' getSensor(123413)
+#' @export
+#'
+getSensor <- function(studyid,params=list(),...) {
+
+  params$entity_type = 'sensor'
+  #unlike the other entities, sensor requires 'tag_study_id", but not "study_id"
+  #getGeneric will still add a study_id parameter but this will be ignored by the api
+  params$tag_study_id = studyid
+
+  return(getGeneric(studyid,params,...))
+}
+
 #' Downloads deployment data using movebank api
 #'
 #' @param studyid \code{integer} The id of the study. Must only be a single id (unlike getStudy).
@@ -117,7 +135,7 @@ getGeneric <- function(studyid,params,...) {
 #'
 #' @param apiReq \code{character} URL for API request.
 #' @param accept_license \code{boolean} Set to TRUE to use md5 method to accept license terms over api.
-#' @param handle \code{handle} Handle object used in httr. Mainly for testing purposes to start with blank session.
+#' @param handle \code{handle} Handle object used in httr. Mainly for testing purposes to start with blank session. Use as handle=handle('')
 #' @param save_as \code{character} Save response directly to disk.
 #'
 #' @return \code{data.frame} Data from API request. If saving results to disk, returns TRUE.
@@ -130,7 +148,7 @@ getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL) {
   userid <- getOption('rmoveapi.userid')
   pass <- getOption('rmoveapi.pass')
 
-  licenseTxt <- "The requested download may contain copyrighted material"
+  #licenseTxt <- "The requested download may contain copyrighted material"
 
   if(is.null(userid)) {
     stop('Need to set userid.\nUse options(rmoveapi.userid=<userid>)')
@@ -160,10 +178,11 @@ getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL) {
     cont <- readLines(file(save_as,open='r'),n=1) #just read first line, because file is probably large
   }
 
-  #Check if response is license text. If not, can just return the data
-  if(!stringr::str_detect(cont,licenseTxt)) {
+  #Check if response is license text. Just look to see if html is sent
+  #If not, can just return the data
+  if(!stringr::str_detect(cont,'^<html>')) {
     if(is.null(save_as)) {
-      return(read.csv(text=cont,stringsAsFactors=FALSE, na.strings = "")) #read in the string into a dataframe and return
+      return(readr::read_csv(cont)) #read in the string into a dataframe and return
     } else {
       return(TRUE) #if saved to disk, then just return true
     }
@@ -183,7 +202,7 @@ getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL) {
 
   md5 <- digest::digest(license, "md5", serialize = FALSE)
 
-  apiReq2 <- glue::glue('{apiReq}&license-md5={md5}')
+  apiReq2 <- as.character(glue::glue('{apiReq}&license-md5={md5}'))
   #apiReq2 <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&study_id=685178886&license-md5=c017d5bda56c72ccd079a864130d851f'
 
   resp2 <- httr::GET(apiReq2, auth, writeMethod)
@@ -192,7 +211,8 @@ getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL) {
   #Either return data or return TRUE (if data was saved to disk)
   if(is.null(save_as)) {
     cont <- httr::content(resp2, as='text', encoding='UTF-8')
-    rows <- read.csv(text=cont,stringsAsFactors=FALSE, na.strings = "") #read in the string into a dataframe
+    #rows <- read.csv(text=cont,stringsAsFactors=FALSE, na.strings = "") #read in the string into a dataframe
+    rows <- readr::read_csv(cont)
     return(rows)
   } else {
     return(TRUE)

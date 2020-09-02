@@ -1,5 +1,6 @@
 context('eventReq')
 
+#TODO: I think this is out dated
 test_that('Get event data for a single sensor type', {
 
   expect_equal(

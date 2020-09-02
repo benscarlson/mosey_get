@@ -1,3 +1,17 @@
+R CMD INSTALL ~/projects/rmoveapi_0.1.0.tar.gz
+
+Name: Galapagos Albatrosses
+Study ID	2911040
+Access: Public, and I have accepted the license terms
+NOTE: for some reason I get an error when trying to access deployment table
+Sensor Type ID: GPS (653) and ACC (2365683)
+Study Statistics
+Number of Animals	28
+Number of Tags	28
+Number of Deployments	28
+Time of First Deployed Location	2008-05-31 13:29:31.998
+Time of Last Deployed Location	2008-11-06 18:00:55.998
+Taxa	Phoebastria irrorata
 
 Study name: BCI Ocelot
 Study id: 123413
@@ -16,19 +30,7 @@ Study id: 685178886
 Access: Public, need to accept license
 Sensor Type ID: GPS (653)
 
-Name: Galapagos Albatrosses
-Study ID	2911040
-Access: Public, and I have accepted the license terms
-Sensor Type ID: GPS (653) and ACC (2365683)
-Study Statistics
-Number of Animals	28
-Number of Tags	28
-Number of Deployments	28
-Time of First Deployed Location	2008-05-31 13:29:31.998
-Time of Last Deployed Location	2008-11-06 18:00:55.998
-Taxa	Phoebastria irrorata
-
-Public, and I have *not* accepted license terms:
+Seems this study I can now get data w/o accepting terms
 Study: African cuckoo in Nigeria (data from Iwajomo et al. 2018)
 Movebank ID	374990463
 Study Statistics

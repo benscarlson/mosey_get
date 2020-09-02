@@ -1,8 +1,7 @@
 context('get_data')
 
-#TODO: somewhere (maybe in testthat.R) need to set username & pass
 #Note these are based on examples in mb docs: https://github.com/movebank/movebank-api-doc/blob/master/movebank-api.md
-
+#TODO: these tests might not work correctly due to various data permissions on the studies. See below for more information.
 test_that('getStudy: url is correct', {
 
   expect_equal(
@@ -55,22 +54,6 @@ test_that('getTag: accept license', {
   expect_equal(class(dat),'data.frame')
 })
 
-#---- Test getDeployment ----#
-
-test_that('getDeployment: url is correct', {
-  expect_equal(
-    getDeployment(2911040,urlonly=TRUE),
-    paste0(API_URL,'?entity_type=deployment&study_id=2911040')
-  )
-})
-
-test_that('getDeployment: accept license', {
-  #685178886 is the test study from the German developer
-  studyId <- 685178886
-  dat <- getDeployment(685178886,accept_license=TRUE)
-  expect_equal(class(dat),'data.frame')
-})
-
 #-----------------------#
 #---- Test getEvent ----#
 #-----------------------#
@@ -110,22 +93,53 @@ test_that('getEvent: get gps data', {
 #---- Test getMvData ----#
 #------------------------#
 
-test_that('getMvData: get data, already accepted license on movebank', {
+#TODO: Need to update these tests.
+# Test that requires accept license should test that data can't be
+# downloaded without accepting license first.
+# seperate the set of tests for accepting license and for in-memory vs. save to disk tests.
+
+# Different permission scenarios
+# 1) public studies, can download data w/o accepting terms
+# 2) studies I have permission to download, and have already accepted terms
+# 3) studies I have permission to download, but have not yet accepted terms
+# 4) studies I dont have permission to download
+#
+# It is hard to find an example of #2.
+
+
+test_that('getMvData: get data, permission to download and already accepted license on movebank', {
   #2911040 Name: Galapagos Albatrosses
   apiReq <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&timestamp_start=20080531000000000&timestamp_end=20080601000000000&study_id=2911040'
   dat <- getMvData(apiReq)
-  expect_equal(class(dat),'data.frame')
+  expect_true('data.frame' %in% class(dat))
 })
 
-test_that('getMvData: get data, need to accept license, write to memory, accept_license=FALSE', {
+test_that('getMvData: get data, permission to download, but have not accepted license, accept_license=FALSE', {
+  # 123413 BCI Ocelot
   #685178886 is the test study from the German developer
-  apiReq <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&study_id=685178886'
+  #	10449318 LifeTrack White Stork Loburg - I have permission but need to accept license
+  # 577947076 Lower 48 GOEA Migration
+  apiReq <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&study_id=123413'
   #if accepted license anywhere in r session, then don't need to accept again
   # to force a new session, use handle('')
   dat <- getMvData(apiReq,handle=handle(''))
   expect_equal(dat,NULL)
 })
 
+#API seems like it is not working for this one
+test_that('getMvData: get data, permission to download, but have not accepted license, accept_license=TRUE', {
+  # 123413 BCI Ocelot
+  #685178886 is the test study from the German developer
+  #	10449318 LifeTrack White Stork Loburg - I have permission but need to accept license
+  # 577947076 Lower 48 GOEA Migration
+  apiReq <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&study_id=123413'
+  #if accepted license anywhere in r session, then don't need to accept again
+  # to force a new session, use handle('')
+  dat <- getMvData(apiReq,accept_license=TRUE,handle=handle(''))
+  expect_equal(dat,NULL)
+})
+
+#TODO: I think this is supposed to fail, but it is working
 test_that('getMvData: get data, need to accept license, write to disk, accept_license==FALSE', {
   #685178886 is the test study from the German developer
   tempP <- tempdir()
@@ -138,6 +152,7 @@ test_that('getMvData: get data, need to accept license, write to disk, accept_li
   expect_equal(dat,NULL)
 })
 
+#TODO: gets data but maybe not accepting license correctly
 #TODO: Some strange behavior with 500 error when doing handle(''), but then it worked correctly.
 test_that('getMvData: get data, need to accept license, write to memory, accept_license==TRUE', {
   #685178886 is the test study from the German developer
@@ -149,6 +164,7 @@ test_that('getMvData: get data, need to accept license, write to memory, accept_
   expect_equal(class(dat),'data.frame')
 })
 
+#This is working, but I think I can get this data without accepting license
 test_that('getMvData: get data, need to accept license, write to disk, accept_license==TRUE', {
   #685178886 is the test study from the German developer
   tempP <- tempdir()
