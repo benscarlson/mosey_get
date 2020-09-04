@@ -4,7 +4,13 @@
 \alias{getMvData}
 \title{Gets movebank data based on api request}
 \usage{
-getMvData(apiReq, accept_license = FALSE, handle = NULL, save_as = NULL)
+getMvData(
+  apiReq,
+  accept_license = FALSE,
+  handle = NULL,
+  save_as = NULL,
+  clean = TRUE
+)
 }
 \arguments{
 \item{apiReq}{\code{character} URL for API request.}
@@ -14,6 +20,8 @@ getMvData(apiReq, accept_license = FALSE, handle = NULL, save_as = NULL)
 \item{handle}{\code{handle} Handle object used in httr. Mainly for testing purposes to start with blank session. Use as handle=handle('')}
 
 \item{save_as}{\code{character} Save response directly to disk.}
+
+\item{clean}{\code{character} Defaults to true. Removes line breaks and trims whitespace from all fields}
 }
 \value{
 \code{data.frame} Data from API request. If saving results to disk, returns TRUE.

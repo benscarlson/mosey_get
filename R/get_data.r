@@ -116,6 +116,7 @@ getGeneric <- function(studyid,params,...) {
 
   optargs <- list(...)
 
+
   if(missing(studyid)) {
     stop('Must provide studyid.')
   } else {
@@ -124,10 +125,11 @@ getGeneric <- function(studyid,params,...) {
 
   req <- apiReq(params)
 
+
   if('urlonly' %in% names(optargs) && optargs$urlonly) { #note using short-circuit &&
     return(req)
   } else {
-    return(getMvData(req,...)) #make the request
+    return(getMvData(req,...))
   }
 }
 
@@ -137,13 +139,14 @@ getGeneric <- function(studyid,params,...) {
 #' @param accept_license \code{boolean} Set to TRUE to use md5 method to accept license terms over api.
 #' @param handle \code{handle} Handle object used in httr. Mainly for testing purposes to start with blank session. Use as handle=handle('')
 #' @param save_as \code{character} Save response directly to disk.
+#' @param clean \code{character} Defaults to true. Removes line breaks and trims whitespace from all fields
 #'
 #' @return \code{data.frame} Data from API request. If saving results to disk, returns TRUE.
 #' @examples
 #' apiReq <- https://www.movebank.org/movebank/service/direct-read?entity_type=study&study_id=2911040
 #' getMvData(apiReq,accept_license=TRUE)
 #'
-getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL) {
+getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL,clean=TRUE) {
 
   userid <- getOption('rmoveapi.userid')
   pass <- getOption('rmoveapi.pass')
@@ -182,7 +185,20 @@ getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL) {
   #If not, can just return the data
   if(!stringr::str_detect(cont,'^<html>')) {
     if(is.null(save_as)) {
-      return(readr::read_csv(cont)) #read in the string into a dataframe and return
+      rows <- readr::read_csv(cont)
+
+      # if clean=TRUE, we should strip out all
+      # non-printing line breaks and trim white space
+      # note this code is duplicated below for case
+      # where we have to accept the license
+      if(clean) {
+        rows <- rows %>%
+          dplyr::mutate_if(is.character,
+            function(x) {trimws(stringr::str_replace_all(x, '[\r\n]',' '))})
+      }
+
+      return(rows)
+
     } else {
       return(TRUE) #if saved to disk, then just return true
     }
@@ -213,6 +229,15 @@ getMvData <- function(apiReq,accept_license=FALSE,handle=NULL,save_as=NULL) {
     cont <- httr::content(resp2, as='text', encoding='UTF-8')
     #rows <- read.csv(text=cont,stringsAsFactors=FALSE, na.strings = "") #read in the string into a dataframe
     rows <- readr::read_csv(cont)
+
+    # if clean=TRUE, we should strip out all
+    # non-printing line breaks and trim white space
+    if(clean) {
+      rows <- rows %>%
+        dplyr::mutate_if(is.character,
+          function(x) {trimws(stringr::str_replace_all(x, '[\r\n]',' '))})
+    }
+
     return(rows)
   } else {
     return(TRUE)

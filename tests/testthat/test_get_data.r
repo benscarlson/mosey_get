@@ -106,6 +106,39 @@ test_that('getEvent: get gps data', {
 #
 # It is hard to find an example of #2.
 
+#This is the most recent test, should update others to reflect this one
+test_that('getMvData: test that stripping /r/n and triming works', {
+
+  #10449318 LifeTrack White Stork Loburg
+  # study$grants_used contains field with an \n
+  # individual$death_comments contains field with an \n
+  # tag$comments contains field with an \n
+
+  req <- list(
+      entity_type='study',
+      study_id=10449318 #LifeTrack White Stork Loburg
+    ) %>% apiReq
+
+  #grants_used field in this study has \n character
+  #Need to find positive test cases for \r and \r\n and whitespace in begining and end
+  dat1 <- getMvData(req,clean=FALSE)
+
+  expect_true(stringr::str_detect(dat1$grants_used,'[\r\n]'))
+
+  dat2 <- getMvData(req) #Default is to clean the fields
+
+  expect_false(stringr::str_detect(dat2$grants_used,'[\r\n]')) #Check for nonprinting line breaks
+  expect_false(stringr::str_detect(dat2$grants_used,'^\\s+')) #Check for white space in beginning
+  expect_false(stringr::str_detect(dat2$grants_used,'\\s+$')) #Check for white space at end
+
+  req <- list(
+    entity_type='tag',
+    study_id=10449318 #LifeTrack White Stork Loburg
+  ) %>% apiReq
+
+  dat2 <- getMvData(req,clean=FALSE) #Default is to clean the fields
+})
+
 
 test_that('getMvData: get data, permission to download and already accepted license on movebank', {
   #2911040 Name: Galapagos Albatrosses
