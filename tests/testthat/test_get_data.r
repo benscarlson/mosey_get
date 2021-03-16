@@ -159,13 +159,16 @@ test_that('getMvData: get data, permission to download, but have not accepted li
   expect_equal(dat,NULL)
 })
 
+#Note this gets individual, not event (easier to test)
 #API seems like it is not working for this one
 test_that('getMvData: get data, permission to download, but have not accepted license, accept_license=TRUE', {
   # 123413 BCI Ocelot
   #685178886 is the test study from the German developer
   #	10449318 LifeTrack White Stork Loburg - I have permission but need to accept license
   # 577947076 Lower 48 GOEA Migration
-  apiReq <- 'https://www.movebank.org/movebank/service/direct-read?entity_type=event&study_id=123413'
+  .studyId <- 21231406	#LifeTrack White Stork SWGermany 2014-2018
+
+  apiReq <- glue('https://www.movebank.org/movebank/service/direct-read?entity_type=individual&study_id={.studyId}')
   #if accepted license anywhere in r session, then don't need to accept again
   # to force a new session, use handle('')
   dat <- getMvData(apiReq,accept_license=TRUE,handle=handle(''))

@@ -58,3 +58,15 @@ test_that('Get event data for a specified time period', {
   )
 
 })
+
+
+test_that('Ignore attributes if NULL or empty', {
+
+  params <- list(entity_type='event',x1=NULL,x2="")
+
+  expect_equal(
+    apiReq(params),
+    'https://www.movebank.org/movebank/service/direct-read?entity_type=event'
+  )
+
+})

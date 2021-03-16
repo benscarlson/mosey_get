@@ -7,6 +7,9 @@
 #'
 apiReq <- function(params) { #entityType, studyid, fields=NULL, sensor_type_id=NULL,startTs,endTs
 
+  #Remove any elements that are null or empty
+  params <- params[lengths(params) > 0 & params != ""]
+
   if(!is.null(params$study_id)) {
     params$study_id <- paste(params$study_id,collapse=',')
   }

@@ -4,12 +4,14 @@ library(glue)
 library(httr)
 
 #.study_id <- 123413 #BCI Ocelot
-.study_id <- 10449318 #LifeTrack White Stork Loburg
+#.study_id <- 10449318 #LifeTrack White Stork Loburg
+#.studyId <- 21231406	#LifeTrack White Stork SWGermany 2014-2018
+.studyId <- 173641633	#LifeTrack White Stork Vorarlberg
 
 user <- getPass(msg='Userid')
 pass <- getPass(msg='Password')
 
-apiReq <- glue('https://www.movebank.org/movebank/service/direct-read?entity_type=event&timestamp_start=20180501000000000&timestamp_end=20180601000000000&study_id={.study_id}')
+apiReq <- glue('https://www.movebank.org/movebank/service/direct-read?entity_type=individual&study_id={.studyId}')
 
 auth <- httr::authenticate(user,pass)
 
@@ -24,7 +26,7 @@ substring(content(resp),1,20)
 #Make a hash of the license text and return in api request
 md5 <- digest(content(resp), "md5", serialize = FALSE)
 
-#Httr automatically persists cookies in subsequent requests to the same domain
+#Httr should automatically persists cookies in subsequent requests to the same domain
 cookies(resp)
 
 apiReq2 <- glue('{apiReq}&license-md5={md5}')
